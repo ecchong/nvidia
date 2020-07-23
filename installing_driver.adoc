@@ -1,6 +1,6 @@
 ## **Subscription**
 subscription-manager list --available
-subscription-manager attach --pool 8a85f993710f3b090171790a1b361845
+subscription-manager attach --pool <some pool id>
 
 ## **Install Required Packages**
 yum install zlib-devel.i686 zlib-devel.x86_64 redhat-lsb-core.i686 redhat-lsb-core.x86_64 \
