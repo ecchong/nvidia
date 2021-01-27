@@ -47,12 +47,33 @@ mkdumprd -f /boot/initramfs-$(uname -r)kdump.img
 ```
 
 # **Sign and Load Driver**
+If no already done, generate a private key and load to secure boot BIOS
+```shell
 openssl req -new -x509 -newkey rsa:2048 -keyout nvidia.key -outform DER -out nvidia.der -nodes -days 36500 -subj "/CN=Graphics Drivers"
 mokutil --import nvidia.der
 reboot
+```
 
+# ***Install NVIDIA driver with the generated key***
+```shell
 sh ./NVIDIA-Linux-x86_64-450.57.run --module-signing-secret-key=/root/nvidia.key --module-signing-public-key=/root/nvidia.der
+```
 
 # **Exclude Future Kernel Upgrade**
 /etc/yum.conf
 exclude=kernel* redhat-release*     
+
+# Verify
+Check the loaded modules
+```shell
+nvidia_drm             48606  3
+nvidia_modeset       1176975  6 nvidia_drm
+nvidia              19636798  272 nvidia_modeset
+drm_kms_helper        186531  1 nvidia_drm
+drm                   456166  6 drm_kms_helper,nvidia_drm
+```
+
+Check the glxinfo output when login on the workstation
+```shell
+glxinfo -B
+```
